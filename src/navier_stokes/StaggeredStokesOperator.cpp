@@ -200,6 +200,9 @@ void StaggeredStokesOperator::apply(SAMRAIVectorReal<NDIM, double>& x,
 {
     IBAMR_TIMER_START(t_apply);
 
+    // Allocate scratch data.
+    if (d_x) d_x->allocateVectorData();
+
     // Get the vector components.
     const int U_idx = x.getComponentDescriptorIndex(0);
     const int P_idx = x.getComponentDescriptorIndex(1);
@@ -273,6 +276,9 @@ void StaggeredStokesOperator::apply(SAMRAIVectorReal<NDIM, double>& x,
                          /*cf_bdry_synch*/ true);
     d_bc_helper->copyDataAtDirichletBoundaries(A_U_idx, U_scratch_idx);
 
+    // Dellocate scratch data.
+    if (d_x) d_x->deallocateVectorData();
+
     IBAMR_TIMER_STOP(t_apply);
     return;
 } // apply
@@ -289,7 +295,6 @@ StaggeredStokesOperator::initializeOperatorState(const SAMRAIVectorReal<NDIM, do
     // Setup solution and rhs vectors.
     d_x = in.cloneVector(in.getName());
     d_b = out.cloneVector(out.getName());
-    d_x->allocateVectorData();
 
     // Setup the interpolation transaction information.
     d_U_fill_pattern = new SideNoCornersFillPattern(SIDEG, false, false, true);
@@ -360,17 +365,10 @@ void StaggeredStokesOperator::deallocateOperatorState()
     d_P_fill_pattern.setNull();
 
     // Delete the solution and rhs vectors.
-    d_x->resetLevels(d_x->getCoarsestLevelNumber(),
-                     std::min(d_x->getFinestLevelNumber(),
-                              d_x->getPatchHierarchy()->getFinestLevelNumber()));
     d_x->freeVectorComponents();
-
-    d_b->resetLevels(d_b->getCoarsestLevelNumber(),
-                     std::min(d_b->getFinestLevelNumber(),
-                              d_b->getPatchHierarchy()->getFinestLevelNumber()));
-    d_b->freeVectorComponents();
-
     d_x.setNull();
+
+    d_b->freeVectorComponents();
     d_b.setNull();
 
     // Indicate that the operator is NOT initialized.
