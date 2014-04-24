@@ -419,12 +419,9 @@ void AdvDiffPPMConvectiveOperator::applyConvectiveOperator(const int Q_idx, cons
     for (int ln = d_coarsest_ln; ln <= d_finest_ln; ++ln)
     {
         Pointer<PatchLevel<NDIM> > level = d_hierarchy->getPatchLevel(ln);
-        if (!level->checkAllocated(d_Q_scratch_idx))
-        {
-            level->allocatePatchData(d_Q_scratch_idx);
-            level->allocatePatchData(d_q_extrap_idx);
-            if (allocate_q_flux_data) level->allocatePatchData(d_q_flux_idx);
-        }
+        level->allocatePatchData(d_Q_scratch_idx);
+        level->allocatePatchData(d_q_extrap_idx);
+        if (allocate_q_flux_data) level->allocatePatchData(d_q_flux_idx);
     }
 
     // Setup communications algorithm.
