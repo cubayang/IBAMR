@@ -1958,8 +1958,7 @@ void FEDataManager::applyGradientDetector(const Pointer<BasePatchHierarchy<NDIM>
         coarse_level->allocatePatchData(d_qp_count_idx);
         fine_level->allocatePatchData(d_qp_count_idx);
         updateQuadPointCountData(level_number + 1, level_number + 1);
-        Pointer<CoarsenOperator<NDIM> > coarsen_op =
-            new CartesianCellDoubleWeightedAverage<NDIM>();
+        Pointer<CoarsenOperator<NDIM> > coarsen_op = new CartesianCellDoubleWeightedAverage<NDIM>();
         Pointer<CoarsenAlgorithm<NDIM> > coarsen_alg = new CoarsenAlgorithm<NDIM>();
         coarsen_alg->registerCoarsen(d_qp_count_idx, d_qp_count_idx, coarsen_op);
         coarsen_alg->createSchedule(coarse_level, fine_level)->coarsenData();

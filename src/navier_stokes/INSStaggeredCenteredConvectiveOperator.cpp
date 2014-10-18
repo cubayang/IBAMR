@@ -470,7 +470,6 @@ void INSStaggeredCenteredConvectiveOperator::applyConvectiveOperator(const int U
         }
     }
 
-
     // Deallocate scratch data.
     for (int ln = d_coarsest_ln; ln <= d_finest_ln; ++ln)
     {

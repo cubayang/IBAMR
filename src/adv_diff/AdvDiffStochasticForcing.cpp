@@ -280,9 +280,7 @@ void AdvDiffStochasticForcing::setDataOnPatchHierarchy(const int data_idx,
 
         // Set random values for the present cycle as weighted combinations of
         // the generated random values.
-#if !defined(NDEBUG)
         TBOX_ASSERT(cycle_num >= 0 && cycle_num < static_cast<int>(d_weights.size()));
-#endif
         const Array<double>& weights = d_weights[cycle_num];
         Pointer<HierarchyDataOpsReal<NDIM, double> > hier_sc_data_ops =
             hier_data_ops_manager->getOperationsDouble(d_F_sc_var,
