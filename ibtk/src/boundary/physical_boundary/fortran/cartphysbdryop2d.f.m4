@@ -54,42 +54,42 @@ c     mirror-image interior cell value, and let n be the number of cell
 c     widths separating the ghost cell center and the interior cell
 c     center.  We define
 c
-c     u_b = (u_g + u_i)/2
-c     u_n = (u_g - u_i)/(n*h)
+c         u_b = (u_g + u_i)/2
+c         u_n = (u_g - u_i)/(n*h)
 c
 c     If
 c
-c     a*u_b + b*u_n = g
+c         a*u_b + b*u_n = g
 c
 c     then
 c
-c     u_g = (-(a*n*h-2*b)/(a*n*h+2*b))*u_i + (2*n*h/(a*n*h+2*b))*g
-c     = f_i*u_i + f_g*g
+c         u_g = (-(a*n*h-2*b)/(a*n*h+2*b))*u_i + (2*n*h/(a*n*h+2*b))*g
+c             = f_i*u_i + f_g*g
 c
 c     with
 c
-c     f_i = -(a*n*h-2*b)/(a*n*h+2*b)
-c     f_g = 2*n*h/(a*n*h+2*b)
+c         f_i = -(a*n*h-2*b)/(a*n*h+2*b)
+c         f_g = 2*n*h/(a*n*h+2*b)
 c
 c     For side-centered values, we follow a similar approach.  In this
 c     case, however, u_b can be a degree of freedom of the problem, so
 c     that
 c
-c     u_g = u_i + (-a*n*h/b)*u_b + (n*h/b)*g
-c     = f_i*u_i + f_b*u_b + f_g*g
+c         u_g = u_i + (-a*n*h/b)*u_b + (n*h/b)*g
+c             = f_i*u_i + f_b*u_b + f_g*g
 c
 c     with
 c
-c     f_i = 1
-c     f_b = -a*n*h/b
-c     f_g = n*h/b
+c         f_i = 1
+c         f_b = -a*n*h/b
+c         f_g = n*h/b
 c
 c     For Dirichlet boundary conditions, b=0, and the foregoing
 c     expressions are ill defined.  Consequently, in this case, we
 c     eliminate u_b and simply set
 c
-c     u_b = g/a
-c     u_g = 2*u_b - u_i
+c         u_b = g/a
+c         u_g = 2*u_b - u_i
 c
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -707,30 +707,34 @@ c
 
       do j = blower1,bupper1
          do i = blower0,bupper0+1
-            del = dble(abs(j-j_bdry))
-            if (adjoint_op .eq. 1) then
-               u_g = u0(i,j)
-               u0(i,j_bdry) = u0(i,j_bdry) + (1.d0+del)*u_g
-               u0(i,j_bdry+j_shift) = u0(i,j_bdry+j_shift) - del*u_g
-            else
-               u0(i,j) = (1.d0+del)*u0(i,j_bdry)
-     &              - del*u0(i,j_bdry+j_shift)
+            if ( (i .lt. ilower0) .or. (i .gt. iupper0+1) ) then
+               del = dble(abs(j-j_bdry))
+               if (adjoint_op .eq. 1) then
+                  u_g = u0(i,j)
+                  u0(i,j_bdry) = u0(i,j_bdry) + (1.d0+del)*u_g
+                  u0(i,j_bdry+j_shift) = u0(i,j_bdry+j_shift) - del*u_g
+               else
+                  u0(i,j) = (1.d0+del)*u0(i,j_bdry)
+     &                 - del*u0(i,j_bdry+j_shift)
+               endif
             endif
          enddo
       enddo
 
       do j = blower1,bupper1+1
-         do i = blower0,bupper0
-            del = dble(abs(i-i_bdry))
-            if (adjoint_op .eq. 1) then
-               u_g = u1(i,j)
-               u1(i_bdry,j) = u1(i_bdry,j) + (1.d0+del)*u_g
-               u1(i_bdry+i_shift,j) = u1(i_bdry+i_shift,j) - del*u_g
-            else
-               u1(i,j) = (1.d0+del)*u1(i_bdry,j)
-     &              - del*u1(i_bdry+i_shift,j)
-            endif
-         enddo
+         if ( (j .lt. ilower1) .or. (j .gt. iupper1+1) ) then
+            do i = blower0,bupper0
+               del = dble(abs(i-i_bdry))
+               if (adjoint_op .eq. 1) then
+                  u_g = u1(i,j)
+                  u1(i_bdry,j) = u1(i_bdry,j) + (1.d0+del)*u_g
+                  u1(i_bdry+i_shift,j) = u1(i_bdry+i_shift,j) - del*u_g
+               else
+                  u1(i,j) = (1.d0+del)*u1(i_bdry,j)
+     &                 - del*u1(i_bdry+i_shift,j)
+               endif
+            enddo
+         endif
       enddo
 c
       return
