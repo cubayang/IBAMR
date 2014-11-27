@@ -76,13 +76,13 @@ inline SAMRAI::hier::Index<NDIM> IndexUtilities::getCellIndex(const DoubleArray&
     for (unsigned int d = 0; d < NDIM; ++d)
     {
         double dX_lower = X[d] - x_lower[d], dX_upper = X[d] - x_upper[d];
-        if (abs(dX_lower) < abs(dX_upper))
+        if (abs(dX_lower) <= abs(dX_upper))
         {
-            idx(d) = ilower(d) + static_cast<int>(floor((dX_lower) / dx[d]));
+            idx(d) = ilower(d) + floor(dX_lower / dx[d]);
         }
         else
         {
-            idx(d) = iupper(d) + static_cast<int>(floor((dX_upper) / dx[d])) + 1;
+            idx(d) = iupper(d) + floor(dX_upper / dx[d]) + 1;
         }
     }
     return idx;
