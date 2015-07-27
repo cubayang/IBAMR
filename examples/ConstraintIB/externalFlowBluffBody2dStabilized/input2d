@@ -124,8 +124,8 @@ num_structures = 1
 
 ConstraintIBKinematics {
 
-   flyingSnake2dAoA35ds004 {
-   structure_names                  = "flyingSnake2dAoA35ds004"
+   bluffBody2d_ds004 {
+   structure_names                  = "bluffBody2d_ds004"
    structure_levels                 = MAX_LEVELS - 1
    calculate_translational_momentum = 0, 0, 0
    calculate_rotational_momentum    = 0, 0, 0

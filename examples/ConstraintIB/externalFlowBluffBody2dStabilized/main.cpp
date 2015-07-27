@@ -136,6 +136,7 @@ int main(int argc, char* argv[])
         // class INSStaggeredHierarchyIntegrator provides a staggered-grid
         // solver for the incompressible Navier-Stokes equations on an AMR grid
         // hierarchy.
+        const string solver_type = "STAGGERED";
         Pointer<INSHierarchyIntegrator> navier_stokes_integrator = new INSStaggeredHierarchyIntegrator(
             "INSStaggeredHierarchyIntegrator",
             app_initializer->getComponentDatabase("INSStaggeredHierarchyIntegrator"));
@@ -230,7 +231,7 @@ int main(int argc, char* argv[])
             if (solver_type == "STAGGERED" && input_db->keyExists("BoundaryStabilization"))
             {
                 time_integrator->registerBodyForceFunction(new StaggeredStokesOpenBoundaryStabilizer(
-                    "BoundaryStabilization", app_initializer->getComponentDatabase("BoundaryStabilizzation"),
+                    "BoundaryStabilization", app_initializer->getComponentDatabase("BoundaryStabilization"),
                     navier_stokes_integrator, grid_geometry));
             }
         }
