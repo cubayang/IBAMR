@@ -81,6 +81,7 @@ AC_CONFIG_FILES([
   examples/ConstraintIB/eel2d/Makefile
   examples/ConstraintIB/eel3d/Makefile
   examples/ConstraintIB/externalFlowBluffBody2d/Makefile
+  examples/ConstraintIB/externalFlowBluffBody2d_stabilized/Makefile
   examples/IB/Makefile
   examples/IB/explicit/Makefile
   examples/IB/explicit/ex0/Makefile
